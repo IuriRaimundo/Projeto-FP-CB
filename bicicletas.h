@@ -7,9 +7,19 @@
 #define MAX_BICICLETAS 20
 #define LIM_ID 20
 #define LIM_NOME 50
+// Capacidades de bateria
 #define CAP_BAT1 "10"
 #define CAP_BAT2 "15"
 #define CAP_BAT3 "20"
+// Estados da bicicleta
+#define ESTADO_DISP 1
+#define ESTADO_REQ 2
+#define ESTADO_AVAR 3
+#define ESTADO_DESAT 4
+// Campus
+#define RESIDENCIAS 1
+#define CAMPUS1 2
+#define CAMPUS2 3
 
 typedef struct {
 	int id; // Identificacao unica da bicicleta

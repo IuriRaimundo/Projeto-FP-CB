@@ -63,23 +63,48 @@ int lerIdBicicleta(void)
 // Le dados e devolve uma estrutura do tipoBicicleta
 tipoBicicleta lerDadosBicicleta(tipoBicicleta bicicleta)
 {
+    int escolhaEstado, escolhaCampus;
     // Opcoes para as funcoes de escolha multipla
     char estados[LIM_OPCOES][LIM_CHAR_OPCAO] = { "Disponivel", "Requisitada", "Avariada", "Desativada" };
     char campus[LIM_OPCOES][LIM_CHAR_OPCAO]= { "Residencias", "Campus 1", "Campus 2" };
     char baterias[LIM_OPCOES][LIM_CHAR_OPCAO] = {{CAP_BAT1}, {CAP_BAT2}, {CAP_BAT3}};
 
-    // Solicitar e ler dados
+    // Designação de bicicleta
     printf("\nNome: ");
     lerString(bicicleta.nome, LIM_NOME);
+
+    // Solicitar estado e associar valor das contantes de estado à estrutura bicicleta
     printf("\nEstado da bicicleta\n");
-    bicicleta.estado = escolhaMultipla(estados, 4);
+    escolhaEstado = escolhaMultipla(estados, 4);
+    switch (escolhaEstado)
+    {
+        case 1: bicicleta.estado = ESTADO_DISP; break;
+        case 2: bicicleta.estado = ESTADO_REQ; break;
+        case 3: bicicleta.estado = ESTADO_AVAR; break;
+        case 4: bicicleta.estado = ESTADO_DESAT; break;
+    }
+
+    // Solicitar campus e associar valor das contantes de campus à estrutura bicicleta
     printf("\nCampus\n");
-    bicicleta.campus = escolhaMultipla(campus, 3);
+    escolhaCampus = escolhaMultipla(campus, 3);
+    switch (escolhaCampus)
+    {
+        case 1: bicicleta.campus = RESIDENCIAS; break;
+        case 2: bicicleta.campus = CAMPUS1; break;
+        case 3: bicicleta.campus = CAMPUS2; break;
+    }
+
+    // O valor das baterias 1, 2 e 3 é definido em constantes
     printf("\nCapacidade da bateria (%sAh, %sAh ou %sAh)\n", CAP_BAT1, CAP_BAT2, CAP_BAT3);
     bicicleta.capacidade = escolhaMultipla(baterias, 3);
+
+    // Data de aquisição
     printf("\nData de aquisicao (DD/MM/YY): ");
     bicicleta.dAquisicao = lerData();
+
+    // Inicializar o contador de cargas a 0 por defeito
     bicicleta.cargas = 0;
+
     return bicicleta;
 }
 
