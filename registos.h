@@ -10,6 +10,7 @@
 #define LIM_KM 10000
 #define LIM_DESC 201
 #define LIM_NOME_REQ 50
+#define LIM_ID_REG MAX_REGISTOS
 
 // Mensagens de erro/sucesso
 #define MENSAGEM_LIMITE_REG "\nLimite de registos atingido.\n"

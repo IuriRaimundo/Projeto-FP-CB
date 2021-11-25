@@ -86,3 +86,38 @@ int escreverLogAvariaDisponibilidade(tipoBicicleta bicicleta, tipoData data, int
     fclose(fich);
     return controlo;
 }
+
+tipoRegReq lerDadosRegReq(void)
+{
+    tipoRegReq dadosReg;
+    char campus[LIM_OPCOES][LIM_CHAR_OPCAO]= { "Residencias", "Campus 1", "Campus 2" };
+
+    printf("\n\n\tREGISTO DE REQUISIÇÃO\n\n");
+    printf("\nInsira o ID da Bicicleta: ");
+    dadosReg.idBic = lerIdBicicleta();
+    printf("\nInsira o nome do requisitante: ");
+    lerString(dadosReg.nomeReq, LIM_NOME_REQ);
+    printf("\nInsira o campus de origem\n");
+    dadosReg.campusOrigem = escolhaMultipla(campus, 3);
+    switch (dadosReg.campusOrigem)
+    {
+        case 1: dadosReg.campusOrigem= RESIDENCIAS; break;
+        case 2: dadosReg.campusOrigem = CAMPUS1; break;
+        case 3: dadosReg.campusOrigem = CAMPUS2; break;
+    }
+    printf("\n Insira o campus de destino\n");
+    dadosReg.campusDestino = escolhaMultipla(campus, 3);
+    switch (dadosReg.campusDestino)
+    {
+        case 1: dadosReg.campusOrigem= RESIDENCIAS; break;
+        case 2: dadosReg.campusOrigem = CAMPUS1; break;
+        case 3: dadosReg.campusOrigem = CAMPUS2; break;
+    }
+    printf("\n Insira a data de requisicao: ");
+    dadosReg.dataReq = lerData();
+    printf("\n Insira a hora de emprestimo: ");
+    dadosReg.horaEmprestimo.hora = lerInteiro(0, 24);
+    dadosReg.horaEmprestimo.minuto = lerInteiro(0, 60);
+
+    return dadosReg;
+}
