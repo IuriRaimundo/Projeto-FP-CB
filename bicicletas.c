@@ -142,6 +142,7 @@ int gravarFichBicicleta(tipoBicicleta dadosBic[], int elem)
     {
         controlo = 0;
     }
+    fclose(fich);
     return controlo;
 }
 
@@ -162,5 +163,6 @@ int lerFichBicicleta(tipoBicicleta dadosBic[])
     {
         printf(MENSAGEM_ERRO_LER);
     }
+    fclose(fich);
     return elem;
 }
