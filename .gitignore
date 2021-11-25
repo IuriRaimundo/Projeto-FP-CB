@@ -3,6 +3,6 @@
 projeto.depend
 projeto.layout
 projeto.cbp
-.tio
-.dat
-.txt
+*.tio
+*.dat
+*.txt
