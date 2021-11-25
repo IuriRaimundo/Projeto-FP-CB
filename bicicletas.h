@@ -6,7 +6,7 @@
 #define NOME_FICH_BICICLETAS "bicicletas.tio"
 #define MAX_BICICLETAS 20
 #define LIM_ID 20
-#define LIM_NOME 50
+#define LIM_NOME_BIC 50
 // Capacidades de bateria
 #define CAP_BAT1 "10"
 #define CAP_BAT2 "15"
@@ -23,7 +23,7 @@
 
 typedef struct {
 	int id; // Identificacao unica da bicicleta
-	char nome[LIM_NOME]; // Designacao da bicicleta
+	char nome[LIM_NOME_BIC]; // Designacao da bicicleta
 	int estado; // Estado da bicicleta (1 - Disponivel, 2 - Requisitada, 3 - Avariada, 4 - Desativada)
 	int campus; // Campus (1 - Residencias, 2 - Campus1, 3 - Campus2)
 	float distanciaPercorrida; // Acumulador de distância percorrida

@@ -9,6 +9,11 @@ typedef struct {
 	int dia, mes, ano;
 } tipoData;
 
+typedef struct {
+    int hora;
+    int minuto;
+} tipoHora;
+
 tipoData lerData(void);
 int validarData(tipoData data);
 

@@ -71,7 +71,7 @@ tipoBicicleta lerDadosBicicleta(tipoBicicleta bicicleta)
 
     // Designação de bicicleta
     printf("\nNome: ");
-    lerString(bicicleta.nome, LIM_NOME);
+    lerString(bicicleta.nome, LIM_NOME_BIC);
 
     // Solicitar estado e associar valor das contantes de estado à estrutura bicicleta
     printf("\nEstado da bicicleta\n");
