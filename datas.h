@@ -16,5 +16,6 @@ typedef struct {
 
 tipoData lerData(void);
 int validarData(tipoData data);
+tipoHora lerHora(void);
 
 #endif // DATAS_H_INCLUDED

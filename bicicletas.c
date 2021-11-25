@@ -63,10 +63,9 @@ int lerIdBicicleta(void)
 // Le dados e devolve uma estrutura do tipoBicicleta
 tipoBicicleta lerDadosBicicleta(tipoBicicleta bicicleta)
 {
-    int escolhaEstado, escolhaCampus;
+    int escolhaEstado;
     // Opcoes para as funcoes de escolha multipla
     char estados[LIM_OPCOES][LIM_CHAR_OPCAO] = { "Disponivel", "Requisitada", "Avariada", "Desativada" };
-    char campus[LIM_OPCOES][LIM_CHAR_OPCAO]= { "Residencias", "Campus 1", "Campus 2" };
     char baterias[LIM_OPCOES][LIM_CHAR_OPCAO] = {{CAP_BAT1}, {CAP_BAT2}, {CAP_BAT3}};
 
     // Designação de bicicleta
@@ -85,17 +84,10 @@ tipoBicicleta lerDadosBicicleta(tipoBicicleta bicicleta)
     }
 
     // Solicitar campus e associar valor das contantes de campus à estrutura bicicleta
-    printf("\nCampus\n");
-    escolhaCampus = escolhaMultipla(campus, 3);
-    switch (escolhaCampus)
-    {
-        case 1: bicicleta.campus = RESIDENCIAS; break;
-        case 2: bicicleta.campus = CAMPUS1; break;
-        case 3: bicicleta.campus = CAMPUS2; break;
-    }
+    bicicleta.campus = escolhaCampus();
 
     // O valor das baterias 1, 2 e 3 é definido em constantes
-    printf("\nCapacidade da bateria (%sAh, %sAh ou %sAh)\n", CAP_BAT1, CAP_BAT2, CAP_BAT3);
+    printf("\nCapacidade da bateria \n");
     bicicleta.capacidade = escolhaMultipla(baterias, 3);
 
     // Data de aquisição
@@ -165,4 +157,20 @@ int lerFichBicicleta(tipoBicicleta dadosBic[])
     }
     fclose(fich);
     return elem;
+}
+
+// Obtem e devolve o id de um campus definido em constantes
+int escolhaCampus(void)
+{
+    char campus[LIM_OPCOES][LIM_CHAR_OPCAO]= { "Residencias", "Campus 1", "Campus 2" };
+    int escolha, idCampus;
+    printf("\nCampus\n");
+    escolha = escolhaMultipla(campus, 3);
+    switch (escolha)
+    {
+        case 1: idCampus = RESIDENCIAS; break;
+        case 2: idCampus = CAMPUS1; break;
+        case 3: idCampus = CAMPUS2; break;
+    }
+    return idCampus;
 }

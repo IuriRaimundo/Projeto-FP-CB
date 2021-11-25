@@ -112,3 +112,12 @@ int validarData(tipoData data)
 
     return dataValida;
 }
+
+// Lê e devolve uma estrutura tipoHora
+tipoHora lerHora(void)
+{
+    tipoHora hora;
+    hora.hora = lerInteiro(0, 24);
+    hora.minuto = lerInteiro(0, 60);
+    return hora;
+}

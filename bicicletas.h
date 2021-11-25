@@ -8,9 +8,9 @@
 #define LIM_ID 20
 #define LIM_NOME_BIC 50
 // Capacidades de bateria
-#define CAP_BAT1 "10"
-#define CAP_BAT2 "15"
-#define CAP_BAT3 "20"
+#define CAP_BAT1 "10Ah"
+#define CAP_BAT2 "15Ah"
+#define CAP_BAT3 "20Ah"
 // Estados da bicicleta
 #define ESTADO_DISP 1
 #define ESTADO_REQ 2
@@ -41,5 +41,6 @@ tipoBicicleta lerDadosBicicleta(tipoBicicleta bicicleta);
 int procuraBicicleta(tipoBicicleta vetorBicicletas[], int id, int numeroBicicletas);
 int gravarFichBicicleta(tipoBicicleta dadosBic[], int elem);
 int lerFichBicicleta(tipoBicicleta dadosBic[]);
+int escolhaCampus(void);
 
 #endif // BICICLETAS_H_INCLUDED
