@@ -29,6 +29,7 @@ void registarAvariaDisponibilidade(tipoBicicleta vetorBicicletas[], int contBici
         if (tipoRegisto == 1)
         {
             vetorBicicletas[pos].estado = ESTADO_AVAR;
+            vetorBicicletas[pos].avarias++;
         }
         else
         {
