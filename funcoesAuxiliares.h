@@ -16,5 +16,6 @@ int lerInteiro(int minimo, int maximo);
 float lerFloat(float minimo, float maximo);
 void lerString(char vetorCaracteres[], int maximoCaracteres);
 int escolhaMultipla(char textoOpcoes[LIM_OPCOES][LIM_CHAR_OPCAO], int nOpcoes);
+int escolhaSimOuNao(char texto[]);
 
 #endif // FUNCOESAUXILIARES_H_INCLUDED

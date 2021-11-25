@@ -82,6 +82,8 @@ void lerString(char vetorCaracteres[], int maximoCaracteres)
     } while (tamanhoString == 1);
 }
 
+// Recebe uma matriz de carateres com o texto para as diferentes opções e o número de opções
+// Devolve a escolha do utilizador
 int escolhaMultipla(char textoOpcoes[LIM_OPCOES][LIM_CHAR_OPCAO], int nOpcoes)
 {
     int op, i;
@@ -92,4 +94,31 @@ int escolhaMultipla(char textoOpcoes[LIM_OPCOES][LIM_CHAR_OPCAO], int nOpcoes)
     printf("\n\t\tEscolha: ");
     op = lerInteiro(1, nOpcoes);
     return op;
+}
+
+// Recebe o texto para apresentar na solicitação de carater
+// Devolve 1 se for escolhido Sim, 0 se for escolhido não.
+int escolhaSimOuNao(char texto[])
+{
+    char escolha; int retorno;
+    printf("\n\n%s (S/N): ", texto);
+    do
+    {
+        scanf("%c", &escolha);
+        escolha = tolower(escolha);
+        if (escolha != 's' && escolha != 'n')
+        {
+            printf("\tEscolha inválida, insira 'S' ou 'N': ");
+        }
+    }
+    while (escolha != 's' && escolha != 'n');
+    if (escolha == 's')
+    {
+        retorno = 1;
+    }
+    else
+    {
+        retorno = 0;
+    }
+    return retorno;
 }
