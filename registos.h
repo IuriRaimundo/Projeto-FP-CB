@@ -29,7 +29,8 @@ void registarAvariaDisponibilidade(tipoBicicleta vetorBicicletas[], int contBici
 int escreverLogAvariaDisponibilidade(tipoBicicleta bicicleta, tipoData data, int tipoRegisto, char desc[]);
 
 // Registos de requisição
-void registarReq(tipoBicicleta vetorBicicletas, int contBicicletas, tipoRegReq vetorRegReq[], int *contRegReq);
-tipoRegReq lerDadosRegReq(void);
+void registarReq(tipoBicicleta vetorBicicletas[], int contBicicletas, tipoRegReq vetorRegReq[], int *contRegReq);
+tipoRegReq lerDadosRegReq(tipoRegReq reg);
+
 #endif // REGISTOS_H_INCLUDED
 

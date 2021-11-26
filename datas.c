@@ -104,6 +104,10 @@ int validarData(tipoData data)
                 }
             }
         }
+        else
+        {
+            dataValida = 0;
+        }
     }
     else
     {
@@ -117,7 +121,64 @@ int validarData(tipoData data)
 tipoHora lerHora(void)
 {
     tipoHora hora;
-    hora.hora = lerInteiro(0, 24);
-    hora.minuto = lerInteiro(0, 60);
+    // Vetores para guardar a entrada do utilizador e guardar digitos para serem convertidos posteriormente
+    char entrada[6]; char aux[3] = {'\0'};
+    // Vetor para guardar valores convertidos
+    int valoresHora[2] = {-1, -1}; // Incializado com -1 porque 0:0 seria é uma hora válida
+    // Contadores
+    int i, n, contAux, contValoresHora;
+    do
+    {
+
+        // Ler 5 carateres do utilizador para ler uma hora do formato HH:MM
+        lerString(entrada, 6);
+        n = strlen(entrada);
+        contAux = 0;
+        contValoresHora = 0;
+
+        // Percorrer vetor de carateres entrada
+        for (i = 0; i <= n; i++)
+        {
+            // Se o carater for digito e não for \0 deve ir para o vetor aux
+            if (isdigit(entrada[i]) && entrada[i] != '\0')
+            {
+                // Se o contAux não seja menor que 2, a introdução não foi correta e o vetor aux chegou ao limite
+                if (contAux < 2)
+                {
+                    aux[contAux] = entrada[i];
+                    contAux++;
+                }
+            }
+            else if (entrada[i] == '\0' || entrada[i] == ':')
+            {
+                aux[contAux] = '\0'; // Terminar a string
+                valoresHora[contValoresHora] = atoi(aux); // Converter o vetor Aux para numero inteiro e guardar no valoresData
+                contValoresHora++;
+                contAux = 0; // Para substituir os valores do auxiliar nas seguintes iterações
+            }
+        }
+
+        // Guardar os valores na estrutura
+        hora.hora = valoresHora[0];
+        hora.minuto = valoresHora[1];
+
+        if (!validarHora(hora))
+        {
+            printf("\n\tHora invalida, insere novamente (HH:MM): ");
+        }
+    } while (!validarHora(hora));
+
     return hora;
+}
+
+// Recebe uma estrutura do tipoHora e verifica se é válida
+// Devolve 1 se válida, 0 se não.
+int validarHora(tipoHora hora)
+{
+    int valido = 1;
+    if (hora.hora > 23 || hora.hora < 0 || hora.minuto < 0 || hora.minuto > 59)
+    {
+        valido = 0;
+    }
+    return valido;
 }

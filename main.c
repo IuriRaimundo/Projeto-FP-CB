@@ -13,6 +13,9 @@ int main(void)
     tipoBicicleta vetorBicicletas[MAX_BICICLETAS];
     int totalBicicletas;
 
+    tipoRegReq vetorRegReq[MAX_REGISTOS];
+    int totalRegReq;
+
     int op, bicicletasDisponiveis, registosDesloc;
     float totalDistanciaPercorrida;
 
@@ -37,7 +40,7 @@ int main(void)
         case 2: registarAvariaDisponibilidade(vetorBicicletas, totalBicicletas);
          break;
         // 3. Registo de Requisição TODO
-        case 3: break;
+        case 3: registarReq(vetorBicicletas, totalBicicletas, vetorRegReq, &totalRegReq); break;
         // 4. Registo de Devolucao TODO
         case 4: break;
         // 5. Listagens TODO

@@ -58,7 +58,8 @@ void registarAvariaDisponibilidade(tipoBicicleta vetorBicicletas[], int contBici
 // Devolve 1 se guardar com sucesso, 0 se não conseguir abrir o ficheiro.
 int escreverLogAvariaDisponibilidade(tipoBicicleta bicicleta, tipoData data, int tipoRegisto, char desc[])
 {
-    int controlo; FILE *fich;
+    int controlo;
+    FILE *fich;
     fich = fopen(NOME_FICH_LOG, "a");
     if (fich == NULL)
     {
@@ -87,37 +88,48 @@ int escreverLogAvariaDisponibilidade(tipoBicicleta bicicleta, tipoData data, int
     return controlo;
 }
 
-tipoRegReq lerDadosRegReq(void)
+void registarReq(tipoBicicleta vetorBicicletas[], int contBicicletas, tipoRegReq vetorRegReq[], int *contRegReq)
 {
-    tipoRegReq dadosReg;
-    char campus[LIM_OPCOES][LIM_CHAR_OPCAO]= { "Residencias", "Campus 1", "Campus 2" };
+    tipoRegReq novoReg; int pos;
+    printf("\n\n\tREGISTO DE REQUISICAO\n\n");
+    novoReg.idBic = lerIdBicicleta();
+    pos = procuraBicicleta(vetorBicicletas, novoReg.idBic, contBicicletas);
+    if (pos != -1)
+    {
+        novoReg = lerDadosRegReq(novoReg);
+        vetorRegReq[*contRegReq] = novoReg;
+        (*contRegReq)++;
+        printf("\n\nRegisto de requisicao efetuado com sucesso.\n\n");
+    }
+    else
+    {
+        printf("\n\nNao existe uma bicicleta com esse id.\n\n");
+    }
+}
 
-    printf("\n\n\tREGISTO DE REQUISIÇÃO\n\n");
-    printf("\nInsira o ID da Bicicleta: ");
-    dadosReg.idBic = lerIdBicicleta();
+tipoRegReq lerDadosRegReq(tipoRegReq dadosReg)
+{
+    int controlo;
+
     printf("\nInsira o nome do requisitante: ");
-    lerString(dadosReg.nomeReq, LIM_NOME_REQ);
-    printf("\nInsira o campus de origem\n");
-    dadosReg.campusOrigem = escolhaMultipla(campus, 3);
-    switch (dadosReg.campusOrigem)
+    do
     {
-        case 1: dadosReg.campusOrigem= RESIDENCIAS; break;
-        case 2: dadosReg.campusOrigem = CAMPUS1; break;
-        case 3: dadosReg.campusOrigem = CAMPUS2; break;
+        lerString(dadosReg.nomeReq, LIM_NOME_REQ);
+        controlo = verificarNome(dadosReg.nomeReq);
+        if (!controlo)
+        {
+            printf("\nNome invalido, repita a insercao: ");
+        }
     }
-    printf("\n Insira o campus de destino\n");
-    dadosReg.campusDestino = escolhaMultipla(campus, 3);
-    switch (dadosReg.campusDestino)
-    {
-        case 1: dadosReg.campusOrigem= RESIDENCIAS; break;
-        case 2: dadosReg.campusOrigem = CAMPUS1; break;
-        case 3: dadosReg.campusOrigem = CAMPUS2; break;
-    }
-    printf("\n Insira a data de requisicao: ");
-    dadosReg.dataReq = lerData();
-    printf("\n Insira a hora de emprestimo: ");
-    dadosReg.horaEmprestimo.hora = lerInteiro(0, 24);
-    dadosReg.horaEmprestimo.minuto = lerInteiro(0, 60);
+    while (!controlo);
 
+    printf("\nInsira o campus de origem\n");
+    dadosReg.campusOrigem = escolhaCampus();
+    printf("\n Insira o campus de destino\n");
+    dadosReg.campusDestino = escolhaCampus();
+    printf("\n Insira a data de requisicao (%s): ", FORMATO_DATA);
+    dadosReg.dataReq = lerData();
+    printf("\n Insira a hora de emprestimo (%s): ", FORMATO_HORA);
+    dadosReg.horaEmprestimo = lerHora();
     return dadosReg;
 }

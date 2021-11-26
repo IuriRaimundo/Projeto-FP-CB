@@ -122,3 +122,24 @@ int escolhaSimOuNao(char texto[])
     }
     return retorno;
 }
+
+// Verifica se uma string é um nome, se a string tiver menos de 3 carateres consideramos inválida
+// Se conter digitos também consideramos inválida.
+int verificarNome(char nome[])
+{
+    int valido, n, i;
+    valido = 1;
+    n = strlen(nome);
+    if (n < 3)
+    {
+        valido = 0;
+    }
+    for (i = 0; i < n; i++)
+    {
+        if (isdigit(nome[i]))
+        {
+            valido = 0;
+        }
+    }
+    return valido;
+}
