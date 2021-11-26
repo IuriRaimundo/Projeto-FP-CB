@@ -94,8 +94,10 @@ tipoBicicleta lerDadosBicicleta(tipoBicicleta bicicleta)
     printf("\nData de aquisicao (DD/MM/YY): ");
     bicicleta.dAquisicao = lerData();
 
-    // Inicializar o contador de cargas a 0 por defeito
+    // Inicializar contadores e acumuladores
     bicicleta.cargas = 0;
+    bicicleta.avarias = 0;
+    bicicleta.distanciaPercorrida = 0;
 
     return bicicleta;
 }
