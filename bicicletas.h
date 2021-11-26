@@ -26,10 +26,11 @@ typedef struct {
 	char nome[LIM_NOME_BIC]; // Designacao da bicicleta
 	int estado; // Estado da bicicleta (1 - Disponivel, 2 - Requisitada, 3 - Avariada, 4 - Desativada)
 	int campus; // Campus (1 - Residencias, 2 - Campus1, 3 - Campus2)
-	float distanciaPercorrida; // Acumulador de distÃ¢ncia percorrida
+	float distanciaPercorrida; // Acumulador de distância percorrida
+	float tempoUtilizacao; // Acumulador do tempo de utilização
 	int capacidade; // Capacidade da bateria 10 Ah, 15 Ah ou 20 Ah
 	int cargas;      // Contador de cargas
-	int requisicoes; // Contador de requisiÃ§Ãµes
+	int requisicoes; // Contador de requisições
 	int avarias;     // Contador de avarias
 	tipoData dAquisicao; // Data de aquisicao da bicicleta
 } tipoBicicleta;

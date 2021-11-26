@@ -98,6 +98,7 @@ tipoBicicleta lerDadosBicicleta(tipoBicicleta bicicleta)
     bicicleta.cargas = 0;
     bicicleta.avarias = 0;
     bicicleta.distanciaPercorrida = 0;
+    bicicleta.tempoUtilizacao = 0;
 
     return bicicleta;
 }
