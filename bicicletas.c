@@ -97,6 +97,7 @@ tipoBicicleta lerDadosBicicleta(tipoBicicleta bicicleta)
     // Inicializar contadores e acumuladores
     bicicleta.cargas = 0;
     bicicleta.avarias = 0;
+    bicicleta.requisicoes = 0;
     bicicleta.distanciaPercorrida = 0;
     bicicleta.tempoUtilizacao = 0;
 
@@ -118,6 +119,22 @@ int procuraBicicleta(tipoBicicleta vetorBicicletas[], int id, int contBicicletas
         }
     }
     return pos;
+}
+
+// Obtem e devolve o id de um campus definido em constantes
+int escolhaCampus(void)
+{
+    char campus[LIM_OPCOES][LIM_CHAR_OPCAO]= { "Residencias", "Campus 1", "Campus 2" };
+    int escolha, idCampus;
+    printf("\nCampus\n");
+    escolha = escolhaMultipla(campus, 3);
+    switch (escolha)
+    {
+        case 1: idCampus = RESIDENCIAS; break;
+        case 2: idCampus = CAMPUS1; break;
+        case 3: idCampus = CAMPUS2; break;
+    }
+    return idCampus;
 }
 
 // Esta função recebe um vetor de estruturas tipoBicicletas e o numero de
@@ -160,20 +177,4 @@ int lerFichBicicleta(tipoBicicleta dadosBic[])
     }
     fclose(fich);
     return elem;
-}
-
-// Obtem e devolve o id de um campus definido em constantes
-int escolhaCampus(void)
-{
-    char campus[LIM_OPCOES][LIM_CHAR_OPCAO]= { "Residencias", "Campus 1", "Campus 2" };
-    int escolha, idCampus;
-    printf("\nCampus\n");
-    escolha = escolhaMultipla(campus, 3);
-    switch (escolha)
-    {
-        case 1: idCampus = RESIDENCIAS; break;
-        case 2: idCampus = CAMPUS1; break;
-        case 3: idCampus = CAMPUS2; break;
-    }
-    return idCampus;
 }
