@@ -178,3 +178,65 @@ int lerFichBicicleta(tipoBicicleta dadosBic[])
     fclose(fich);
     return elem;
 }
+
+// Recebe uma estrutura do tipo bicicleta e escreve os dados
+void mostrarBicicleta(tipoBicicleta dados)
+{
+    printf("\nBicicleta numero: %d\n\n", dados.id);
+    printf("\tNome: %s\n", dados.nome);
+    switch (dados.estado)
+    {
+        case ESTADO_AVAR: printf("\tEstado: %s\n", "Avariada"); break;
+        case ESTADO_DISP: printf("\tEstado: %s\n", "Disponivel"); break;
+        case ESTADO_REQ: printf("\tEstado: %s\n", "Requisitada"); break;
+        case ESTADO_DESAT: printf("\tEstado: %s\n", "Desativada"); break;
+    }
+    switch (dados.campus)
+    {
+        case RESIDENCIAS: printf("\tCampus: %s\n", "Residencias"); break;
+        case CAMPUS1: printf("\tCampus: %s\n", "Campus 1"); break;
+        case CAMPUS2: printf("\tCampus: %s\n", "Campus 2"); break;
+    }
+    printf("\tDistancia percorrida total: %.2f km\n", dados.distanciaPercorrida);
+    printf("\tTempo de utilizacao total: %.1f horas\n", dados.tempoUtilizacao);
+    switch (dados.capacidade)
+    {
+        case 1: printf("\tCapacidade da bateria: %s\n", CAP_BAT1); break;
+        case 2: printf("\tCapacidade da bateria: %s\n", CAP_BAT2); break;
+        case 3: printf("\tCapacidade da bateria: %s\n", CAP_BAT3); break;
+    }
+    printf("\tNumero de cargas da bateria: %d\n", dados.cargas);
+    printf("\tVezes requisitada: %d\n", dados.requisicoes);
+    printf("\tVezes avariada: %d\n", dados.avarias);
+    printf("\tData de aquisicao: %d/%d/%d\n", dados.dAquisicao.dia, dados.dAquisicao.mes, dados.dAquisicao.ano);
+}
+
+// Recebe o vetor de bicicletas e o número de elementos para apresentar no ecrã os dados
+// de cada elemento
+void mostrarDadosBicicletas(tipoBicicleta vetorBicicletas[], int contBicicletas)
+{
+    int i;
+    for (i = 0; i < contBicicletas; i++)
+    {
+        mostrarBicicleta(vetorBicicletas[i]);
+    }
+}
+
+// Recebe o vetor de bicicletas e o número de elementos para apresentar no ecrã as bicicletas requisitadas
+void mostrarBicicletasRequisitadas(tipoBicicleta vetorBicicletas[], int contBicicletas)
+{
+    int i, requisitadas;
+    printf("\n\nBICICLETAS REQUISITADAS\n");
+    for (i = 0, requisitadas = 0; i < contBicicletas; i++)
+    {
+        if (vetorBicicletas[i].estado == ESTADO_REQ)
+        {
+            mostrarBicicleta(vetorBicicletas[i]);
+            requisitadas++;
+        }
+    }
+    if (requisitadas == 0)
+    {
+       printf("\nNao ha bicicletas requisitadas no momento.\n\n");
+    }
+}

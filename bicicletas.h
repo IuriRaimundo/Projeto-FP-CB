@@ -43,5 +43,7 @@ int procuraBicicleta(tipoBicicleta vetorBicicletas[], int id, int numeroBiciclet
 int escolhaCampus(void);
 int gravarFichBicicleta(tipoBicicleta dadosBic[], int elem);
 int lerFichBicicleta(tipoBicicleta dadosBic[]);
+void mostrarBicicleta(tipoBicicleta dados);
+void mostrarDadosBicicletas(tipoBicicleta vetorBicicletas[], int contBicicletas);
 
 #endif // BICICLETAS_H_INCLUDED
