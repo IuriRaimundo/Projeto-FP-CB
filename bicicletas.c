@@ -97,6 +97,7 @@ tipoBicicleta lerDadosBicicleta(tipoBicicleta bicicleta)
     // Inicializar contadores e acumuladores
     bicicleta.cargas = 0;
     bicicleta.avarias = 0;
+    bicicleta.requisicoes = 0;
     bicicleta.distanciaPercorrida = 0;
     bicicleta.tempoUtilizacao = 0;
 
@@ -118,6 +119,22 @@ int procuraBicicleta(tipoBicicleta vetorBicicletas[], int id, int contBicicletas
         }
     }
     return pos;
+}
+
+// Obtem e devolve o id de um campus definido em constantes
+int escolhaCampus(void)
+{
+    char campus[LIM_OPCOES][LIM_CHAR_OPCAO]= { "Residencias", "Campus 1", "Campus 2" };
+    int escolha, idCampus;
+    printf("\nCampus\n");
+    escolha = escolhaMultipla(campus, 3);
+    switch (escolha)
+    {
+        case 1: idCampus = RESIDENCIAS; break;
+        case 2: idCampus = CAMPUS1; break;
+        case 3: idCampus = CAMPUS2; break;
+    }
+    return idCampus;
 }
 
 // Esta função recebe um vetor de estruturas tipoBicicletas e o numero de
@@ -162,18 +179,64 @@ int lerFichBicicleta(tipoBicicleta dadosBic[])
     return elem;
 }
 
-// Obtem e devolve o id de um campus definido em constantes
-int escolhaCampus(void)
+// Recebe uma estrutura do tipo bicicleta e escreve os dados
+void mostrarBicicleta(tipoBicicleta dados)
 {
-    char campus[LIM_OPCOES][LIM_CHAR_OPCAO]= { "Residencias", "Campus 1", "Campus 2" };
-    int escolha, idCampus;
-    printf("\nCampus\n");
-    escolha = escolhaMultipla(campus, 3);
-    switch (escolha)
+    printf("\nBicicleta numero: %d\n\n", dados.id);
+    printf("\tNome: %s\n", dados.nome);
+    switch (dados.estado)
     {
-        case 1: idCampus = RESIDENCIAS; break;
-        case 2: idCampus = CAMPUS1; break;
-        case 3: idCampus = CAMPUS2; break;
+        case ESTADO_AVAR: printf("\tEstado: %s\n", "Avariada"); break;
+        case ESTADO_DISP: printf("\tEstado: %s\n", "Disponivel"); break;
+        case ESTADO_REQ: printf("\tEstado: %s\n", "Requisitada"); break;
+        case ESTADO_DESAT: printf("\tEstado: %s\n", "Desativada"); break;
     }
-    return idCampus;
+    switch (dados.campus)
+    {
+        case RESIDENCIAS: printf("\tCampus: %s\n", "Residencias"); break;
+        case CAMPUS1: printf("\tCampus: %s\n", "Campus 1"); break;
+        case CAMPUS2: printf("\tCampus: %s\n", "Campus 2"); break;
+    }
+    printf("\tDistancia percorrida total: %.2f km\n", dados.distanciaPercorrida);
+    printf("\tTempo de utilizacao total: %.1f horas\n", dados.tempoUtilizacao);
+    switch (dados.capacidade)
+    {
+        case 1: printf("\tCapacidade da bateria: %s\n", CAP_BAT1); break;
+        case 2: printf("\tCapacidade da bateria: %s\n", CAP_BAT2); break;
+        case 3: printf("\tCapacidade da bateria: %s\n", CAP_BAT3); break;
+    }
+    printf("\tNumero de cargas da bateria: %d\n", dados.cargas);
+    printf("\tVezes requisitada: %d\n", dados.requisicoes);
+    printf("\tVezes avariada: %d\n", dados.avarias);
+    printf("\tData de aquisicao: %d/%d/%d\n", dados.dAquisicao.dia, dados.dAquisicao.mes, dados.dAquisicao.ano);
+}
+
+// Recebe o vetor de bicicletas e o número de elementos para apresentar no ecrã os dados
+// de cada elemento
+void mostrarDadosBicicletas(tipoBicicleta vetorBicicletas[], int contBicicletas)
+{
+    int i;
+    for (i = 0; i < contBicicletas; i++)
+    {
+        mostrarBicicleta(vetorBicicletas[i]);
+    }
+}
+
+// Recebe o vetor de bicicletas e o número de elementos para apresentar no ecrã as bicicletas requisitadas
+void mostrarBicicletasRequisitadas(tipoBicicleta vetorBicicletas[], int contBicicletas)
+{
+    int i, requisitadas;
+    printf("\n\nBICICLETAS REQUISITADAS\n");
+    for (i = 0, requisitadas = 0; i < contBicicletas; i++)
+    {
+        if (vetorBicicletas[i].estado == ESTADO_REQ)
+        {
+            mostrarBicicleta(vetorBicicletas[i]);
+            requisitadas++;
+        }
+    }
+    if (requisitadas == 0)
+    {
+       printf("\nNao ha bicicletas requisitadas no momento.\n\n");
+    }
 }

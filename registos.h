@@ -7,7 +7,7 @@
 
 #define NOME_FICH_LOG "registos_avarias_disponibilidade.txt"
 #define MAX_REGISTOS 100
-#define LIM_KM 10000
+#define LIM_KM 1000
 #define LIM_DESC 201
 #define LIM_NOME_REQ 50
 #define LIM_ID_REG MAX_REGISTOS

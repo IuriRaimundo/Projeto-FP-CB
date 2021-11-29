@@ -40,8 +40,10 @@ int lerIdBicicleta(void);
 int verificarUnicidadeIdBic(tipoBicicleta vetor[], int contBicicletas, int id);
 tipoBicicleta lerDadosBicicleta(tipoBicicleta bicicleta);
 int procuraBicicleta(tipoBicicleta vetorBicicletas[], int id, int numeroBicicletas);
+int escolhaCampus(void);
 int gravarFichBicicleta(tipoBicicleta dadosBic[], int elem);
 int lerFichBicicleta(tipoBicicleta dadosBic[]);
-int escolhaCampus(void);
+void mostrarBicicleta(tipoBicicleta dados);
+void mostrarDadosBicicletas(tipoBicicleta vetorBicicletas[], int contBicicletas);
 
 #endif // BICICLETAS_H_INCLUDED

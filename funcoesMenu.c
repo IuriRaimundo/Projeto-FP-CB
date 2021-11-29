@@ -4,6 +4,7 @@
 #include "funcoesMenu.h"
 #include "bicicletas.h"
 #include "mensagens.h"
+#include "csv.h"
 
 int menu(int totalBicicletas, float distancia, int registos, int bicicletasDisponiveis)
 {
@@ -33,6 +34,7 @@ void gravarDados(tipoBicicleta dadosBic[], int totBic)
 {
     int controlo;
     controlo = gravarFichBicicleta(dadosBic, totBic);
+    gravarBicicletasCSV(dadosBic, totBic);
     if (controlo == 0)
     {
         printf(MENSAGEM_ERRO_GRAVAR);
