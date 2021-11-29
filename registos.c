@@ -90,7 +90,8 @@ int escreverLogAvariaDisponibilidade(tipoBicicleta bicicleta, tipoData data, int
 
 void registarReq(tipoBicicleta vetorBicicletas[], int contBicicletas, tipoRegReq vetorRegReq[], int *contRegReq)
 {
-    tipoRegReq novoReg; int pos;
+    tipoRegReq novoReg;
+    int pos;
     printf("\n\n\tREGISTO DE REQUISICAO\n\n");
     novoReg.idBic = lerIdBicicleta();
     pos = procuraBicicleta(vetorBicicletas, novoReg.idBic, contBicicletas);
@@ -100,11 +101,13 @@ void registarReq(tipoBicicleta vetorBicicletas[], int contBicicletas, tipoRegReq
         vetorRegReq[*contRegReq] = novoReg;
         (*contRegReq)++;
         printf("\n\nRegisto de requisicao efetuado com sucesso.\n\n");
+        vetorBicicletas[pos].requisicoes++;
     }
     else
     {
         printf("\n\nNao existe uma bicicleta com esse id.\n\n");
     }
+
 }
 
 tipoRegReq lerDadosRegReq(tipoRegReq dadosReg)
@@ -132,4 +135,33 @@ tipoRegReq lerDadosRegReq(tipoRegReq dadosReg)
     printf("\n Insira a hora de emprestimo (%s): ", FORMATO_HORA);
     dadosReg.horaEmprestimo = lerHora();
     return dadosReg;
+}
+
+void registarDev(tipoBicicleta vetorBicicletas[], int contBicicletas)
+{
+    int id, pos;
+    tipoHora hora;
+    printf("\n\nREGISTO DE DEVOLUCAO\n\n");
+
+    id = lerIdBicicleta();
+    pos = procuraBicicleta(vetorBicicletas, id, contBicicletas);
+
+    if (pos == -1)
+    {
+        printf("\n\nEssa bicicleta nao existe.\n\n");
+    }
+    else
+    {
+        printf("Insira a distância percorrida (KM): ");
+        vetorBicicletas[pos].distanciaPercorrida += lerFloat(0, LIM_KM);
+        printf("Insira o tempo de utilizacao (%s): ", FORMATO_HORA);
+        vetorBicicletas[pos].tempoUtilizacao += lerHora();
+        printf("Insira o numero de cargas: ");
+        vetorBicicletas[pos].cargas = lerInteiro(0,LIM_CARGAS);
+        if (vetorBicicletas[pos].cargas > LIM_CARGAS)
+        {
+        vetorBicicletas[pos].estado = ESTADO_DESAT;
+        }
+    }
+    printf("\n\nRegisto efetuado com sucesso\n");
 }

@@ -11,6 +11,7 @@
 #define LIM_DESC 201
 #define LIM_NOME_REQ 50
 #define LIM_ID_REG MAX_REGISTOS
+#define LIM_CARGAS 1000
 
 // Mensagens de erro/sucesso
 #define MENSAGEM_LIMITE_REG "\nLimite de registos atingido.\n"
@@ -24,6 +25,7 @@ typedef struct {
     tipoHora horaEmprestimo;
 } tipoRegReq;
 
+
 // Registos de avaria disponibilidade
 void registarAvariaDisponibilidade(tipoBicicleta vetorBicicletas[], int contBicicletas);
 int escreverLogAvariaDisponibilidade(tipoBicicleta bicicleta, tipoData data, int tipoRegisto, char desc[]);
@@ -31,6 +33,9 @@ int escreverLogAvariaDisponibilidade(tipoBicicleta bicicleta, tipoData data, int
 // Registos de requisição
 void registarReq(tipoBicicleta vetorBicicletas[], int contBicicletas, tipoRegReq vetorRegReq[], int *contRegReq);
 tipoRegReq lerDadosRegReq(tipoRegReq reg);
+
+// Registos de Devolução
+void registarDev(tipoBicicleta vetorBicicletas[], int contBicicletas);
 
 #endif // REGISTOS_H_INCLUDED
 
