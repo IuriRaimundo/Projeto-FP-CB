@@ -21,5 +21,6 @@ tipoData lerData(void);
 int validarData(tipoData data);
 tipoHora lerHora(void);
 int validarHora(tipoHora hora);
+float tipoHoraParaFloat(tipoHora hora);
 
 #endif // DATAS_H_INCLUDED

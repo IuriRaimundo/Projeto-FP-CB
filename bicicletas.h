@@ -45,5 +45,6 @@ int gravarFichBicicleta(tipoBicicleta dadosBic[], int elem);
 int lerFichBicicleta(tipoBicicleta dadosBic[]);
 void mostrarBicicleta(tipoBicicleta dados);
 void mostrarDadosBicicletas(tipoBicicleta vetorBicicletas[], int contBicicletas);
+void mostrarBicicletasRequisitadas(tipoBicicleta vetorBicicletas[], int contBicicletas);
 
 #endif // BICICLETAS_H_INCLUDED

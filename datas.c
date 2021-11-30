@@ -182,3 +182,11 @@ int validarHora(tipoHora hora)
     }
     return valido;
 }
+
+// Recebe um estrutura do tipoHora e devolve o seu valor em float
+float tipoHoraParaFloat(tipoHora hora)
+{
+    float horas;
+    horas = hora.minuto + (hora.minuto / 60);
+    return horas;
+}

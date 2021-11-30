@@ -173,7 +173,7 @@ int lerFichBicicleta(tipoBicicleta dadosBic[])
     }
     else
     {
-        printf(MENSAGEM_ERRO_LER);
+        printf("\nNao foi possivel abrir o ficheiro das bicicletas.\n");
     }
     fclose(fich);
     return elem;
