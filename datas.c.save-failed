@@ -8,14 +8,14 @@
 tipoData lerData(void)
 {
     tipoData data;
-    char entrada[CARATERES_DATA];
+    char entrada[12];
     char aux[5];
     int valoresData[3] = {0}, i, contAux, contValoresData;
     do
     {
-        lerString(entrada, CARATERES_DATA);
+        lerString(entrada, 12);
         // Percorrer vetor entrada para adicionar os valores dia, mes e ano ao vetor valoresData
-        for (i = 0, contAux = 0, contValoresData = 0; i < CARATERES_DATA; i++)
+        for (i = 0, contAux = 0, contValoresData = 0; i < 12; i++)
         {
             // Se entrada[i] for digito, adicionar ao vetor aux e incrementar contador de carateres no vetor aux
             // Caso entrada[i] seja o último carater antes do \0, converter aux para inteiro e guardar no vetor valoresData
@@ -123,7 +123,7 @@ tipoHora lerHora(void)
 {
     tipoHora hora;
     // Vetores para guardar a entrada do utilizador e guardar digitos para serem convertidos posteriormente
-    char entrada[CARATERES_HORA];
+    char entrada[6];
     char aux[3] = {'\0'};
     // Vetor para guardar valores convertidos
     int valoresHora[2] = {-1, -1}; // Incializado com -1 porque 0:0 seria é uma hora válida
@@ -250,17 +250,19 @@ int compararDatas(tipoData d1, tipoData d2)
     return resultado;
 }
 
-// Recebe uma string, uma data e um carater.
-// Converte a data com o separador desejado para uma string
-void dataParaString(char str[], tipoData data, char separador)
+char *dataParaString(tipoData data, char separador)
 {
-    sprintf(str, "%02d%c%02d%c%d", data.dia, separador, data.mes, separador, data.ano);
+    char str[12];
+    str[0] = (char) data.dia / 10;
+    str[1] = (char) data.dia % 10;
+    str[2] = separador;
+    str[3] = (char) data.mes / 10;
+    str[4] = (char) data.mes % 10;
+    str[5] = separador;
+    str[6] = (char) data.ano / 1000;
+    str[7] = (char) data.ano / 100 % 10;
+    str[8] = (char) data.ano / 10 % 10;
+    str[9] = (char) data.ano % 10;
+    return str;
 }
-
-// Recebe uma string, uma hora
-// Converte a hora para uma string
-void horaParaString(char str[], tipoHora hora)
-{
-    sprintf(str, "%02d:%02d", hora.hora, hora.minuto);
-}
-
+char *horaParaString(tipoHora hora);

@@ -6,16 +6,18 @@
 
 // Esta funcao cria uma estrutura bicicleta e adiciona-lhe ao vetor das bicicletas,
 // recebe o ponteiro para o vetor e o contador de bicicletas
-void criarBicicleta(tipoBicicleta vetorBicicletas[], int *contBicicletas)
+// Devolve 1 se criou uma bicicleta, 0 se não.
+int criarBicicleta(tipoBicicleta vetorBicicletas[], int *contBicicletas)
 {
-    tipoBicicleta bicicleta; int idUnico;
+    tipoBicicleta bicicleta; int idUnico, controlo;
+    controlo = 0;
     if (*contBicicletas == MAX_BICICLETAS)
     {
         printf("\n\nLimite de bicicletas atingido.\n\n");
     }
     else
     {
-        printf("\n\nNOVA BICICLETA\n\n");
+        printf("\n\n\tNOVA BICICLETA\n\n");
         bicicleta.id = lerIdBicicleta();
         idUnico = verificarUnicidadeIdBic(vetorBicicletas, *contBicicletas, bicicleta.id);
         // Ler dados da bicicleta e adicionar ao vetor caso tenha sido inserido um id válido.
@@ -23,16 +25,19 @@ void criarBicicleta(tipoBicicleta vetorBicicletas[], int *contBicicletas)
         {
             // Ler dados restantes
             bicicleta = lerDadosBicicleta(bicicleta);
+
             // Adicionar bicicleta ao vetor
             vetorBicicletas[*contBicicletas] = bicicleta;
             (*contBicicletas)++;
-            printf("\n\nBicicleta adicionada com sucesso!\n\n");
+            controlo = 1;
+            printf("\nBicicleta adicionada com sucesso!\n");
         }
         else
         {
-            printf("\n\nJa existe uma bicicleta com este id.\n\n");
+            printf("\nJa existe uma bicicleta com este id.\n");
         }
     }
+    return controlo;
 }
 
 // Verifica a unicidade de um id de bicicleta, devolve 1 se for unico, 0 se não.
@@ -55,7 +60,7 @@ int verificarUnicidadeIdBic(tipoBicicleta vetor[], int contBicicletas, int id)
 int lerIdBicicleta(void)
 {
     int id;
-    printf("Identificacao da bicicleta: ");
+    printf("\tIdentificacao da bicicleta: ");
     id = lerInteiro(1, LIM_ID);
     return id;
 }
@@ -69,11 +74,11 @@ tipoBicicleta lerDadosBicicleta(tipoBicicleta bicicleta)
     char baterias[LIM_OPCOES][LIM_CHAR_OPCAO] = {{CAP_BAT1}, {CAP_BAT2}, {CAP_BAT3}};
 
     // Designação de bicicleta
-    printf("\nNome: ");
+    printf("\n\tNome: ");
     lerString(bicicleta.nome, LIM_NOME_BIC);
 
     // Solicitar estado e associar valor das contantes de estado à estrutura bicicleta
-    printf("\nEstado da bicicleta\n");
+    printf("\n\tEstado da bicicleta\n");
     escolhaEstado = escolhaMultipla(estados, 4);
     switch (escolhaEstado)
     {
@@ -87,17 +92,25 @@ tipoBicicleta lerDadosBicicleta(tipoBicicleta bicicleta)
     bicicleta.campus = escolhaCampus();
 
     // O valor das baterias 1, 2 e 3 é definido em constantes
-    printf("\nCapacidade da bateria \n");
+    printf("\n\tCapacidade da bateria \n");
     bicicleta.capacidade = escolhaMultipla(baterias, 3);
 
     // Data de aquisição
-    printf("\nData de aquisicao (DD/MM/YY): ");
+    printf("\n\tData de aquisicao (%s): ", FORMATO_DATA);
     bicicleta.dAquisicao = lerData();
 
     // Inicializar contadores e acumuladores
     bicicleta.cargas = 0;
     bicicleta.avarias = 0;
-    bicicleta.requisicoes = 0;
+    if (bicicleta.estado == ESTADO_REQ)
+    {
+        bicicleta.requisicoes = 1;
+    }
+    else
+    {
+        bicicleta.requisicoes = 0;
+    }
+    bicicleta.substituicoes = 0;
     bicicleta.distanciaPercorrida = 0;
     bicicleta.tempoUtilizacao = 0;
 
@@ -126,7 +139,7 @@ int escolhaCampus(void)
 {
     char campus[LIM_OPCOES][LIM_CHAR_OPCAO]= { "Residencias", "Campus 1", "Campus 2" };
     int escolha, idCampus;
-    printf("\nCampus\n");
+    printf("\n\tCampus\n");
     escolha = escolhaMultipla(campus, 3);
     switch (escolha)
     {
@@ -171,10 +184,6 @@ int lerFichBicicleta(tipoBicicleta dadosBic[])
         fread(&elem, sizeof(int), 1, fich);
         fread(dadosBic, sizeof(tipoBicicleta), elem, fich);
     }
-    else
-    {
-        printf("\nNao foi possivel abrir o ficheiro das bicicletas.\n");
-    }
     fclose(fich);
     return elem;
 }
@@ -182,6 +191,7 @@ int lerFichBicicleta(tipoBicicleta dadosBic[])
 // Recebe uma estrutura do tipo bicicleta e escreve os dados
 void mostrarBicicleta(tipoBicicleta dados)
 {
+    char dataStr[CARATERES_DATA];
     printf("\nBicicleta numero: %d\n\n", dados.id);
     printf("\tNome: %s\n", dados.nome);
     switch (dados.estado)
@@ -208,7 +218,8 @@ void mostrarBicicleta(tipoBicicleta dados)
     printf("\tNumero de cargas da bateria: %d\n", dados.cargas);
     printf("\tVezes requisitada: %d\n", dados.requisicoes);
     printf("\tVezes avariada: %d\n", dados.avarias);
-    printf("\tData de aquisicao: %d/%d/%d\n", dados.dAquisicao.dia, dados.dAquisicao.mes, dados.dAquisicao.ano);
+    dataParaString(dataStr, dados.dAquisicao, '/');
+    printf("\tData de aquisicao: %s\n", dataStr);
 }
 
 // Recebe o vetor de bicicletas e o número de elementos para apresentar no ecrã os dados
@@ -239,4 +250,31 @@ void mostrarBicicletasRequisitadas(tipoBicicleta vetorBicicletas[], int contBici
     {
        printf("\nNao ha bicicletas requisitadas no momento.\n\n");
     }
+}
+
+// Recebe o vetor de bicicletas e numero de elementos
+// Devolve o numero de bicicletas com o estado disponivel
+int contarBicicletasDisponiveis(tipoBicicleta vetorBicicletas[], int contBicicletas)
+{
+    int i, disponiveis;
+    for (i = 0, disponiveis = 0; i < contBicicletas; i++)
+    {
+        if (vetorBicicletas[i].estado == ESTADO_DISP)
+        {
+            disponiveis++;
+        }
+    }
+    return disponiveis;
+}
+
+// Recebe o vetor de bicicletas e numero de elementos
+// Devolve a total distancia percorrida
+float contarDistPercorrida(tipoBicicleta vetorBicicletas[], int contBicicletas)
+{
+    int i; float totalDist;
+    for (i = 0, totalDist = 0; i < contBicicletas; i++)
+    {
+        totalDist += vetorBicicletas[i].distanciaPercorrida;
+    }
+    return totalDist;
 }

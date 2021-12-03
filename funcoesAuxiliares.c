@@ -89,7 +89,7 @@ int escolhaMultipla(char textoOpcoes[LIM_OPCOES][LIM_CHAR_OPCAO], int nOpcoes)
     int op, i;
     for (i = 0; i < nOpcoes; i++)
     {
-        printf("%d. %s\n", i + 1, textoOpcoes[i]);
+        printf("\t%d. %s\n", i + 1, textoOpcoes[i]);
     }
     printf("\n\t\tEscolha: ");
     op = lerInteiro(1, nOpcoes);
@@ -101,7 +101,7 @@ int escolhaMultipla(char textoOpcoes[LIM_OPCOES][LIM_CHAR_OPCAO], int nOpcoes)
 int escolhaSimOuNao(char texto[])
 {
     char escolha; int retorno;
-    printf("\n\n%s (S/N): ", texto);
+    printf("%s (S/N): ", texto);
     do
     {
         scanf("%c", &escolha);
@@ -120,6 +120,7 @@ int escolhaSimOuNao(char texto[])
     {
         retorno = 0;
     }
+    limpaBufferStdin();
     return retorno;
 }
 

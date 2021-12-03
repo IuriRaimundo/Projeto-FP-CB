@@ -3,8 +3,9 @@
 #include "registos.h"
 #include "mensagens.h"
 
-// Funcao recebe o vetor das Bicicletas, o contador de Bicicletas e não retorna nada, no entanto vai pedir ao utilizador
-// a data do registo, o tipo e a descrição, depois vai verificar o estado da bicicleta.
+// Funcao recebe o vetor das Bicicletas, o contador de Bicicletas. Se a bicicleta nao estiver
+// requisita vai pedir ao utilizador a data do registo, o tipo e a descrição e alterar o estado da bicicleta
+// e no final registar num ficheiro log
 void registarAvariaDisponibilidade(tipoBicicleta vetorBicicletas[], int contBicicletas)
 {
     char opcoesRegisto[LIM_OPCOES][LIM_CHAR_OPCAO] = { "Avaria", "Disponibilidade" };
@@ -18,40 +19,49 @@ void registarAvariaDisponibilidade(tipoBicicleta vetorBicicletas[], int contBici
 
     if (pos == -1)
     {
-        printf("\n\nEssa bicicleta nao existe.\n\n");
+        printf(MENSAGEM_BICICLETA_NAO_EXISTE);
     }
     else
     {
-        printf("\nInsira a data de registo: ");
-        data = lerData();
-        printf("\nInsira o tipo de registo: \n");
-        tipoRegisto = escolhaMultipla(opcoesRegisto, 2);
-        printf("\nInsira a descricao: ");
-        lerString(descReg, LIM_DESC);
-
-        // Alterar estado da bicicleta com a escolha do utilizador com o valor definido em constantes
-        if (tipoRegisto == 1)
+        // Apenas é permitido alterar  estado de uma bicicleta nao requisitada, pelo que deve ser
+        // efetuada a devolucao antes de se efetuar um registo de avaria e disponibilidade
+        if (vetorBicicletas[pos].estado != ESTADO_REQ)
         {
-            vetorBicicletas[pos].estado = ESTADO_AVAR;
-            vetorBicicletas[pos].avarias++;
+            printf("\n\tInsira a data de registo (%s): ", FORMATO_DATA);
+            data = lerData();
+            printf("\n\tInsira o tipo de registo: \n");
+            tipoRegisto = escolhaMultipla(opcoesRegisto, 2);
+            printf("\n\tInsira a descricao: ");
+            lerString(descReg, LIM_DESC);
+
+            // Alterar estado da bicicleta com a escolha do utilizador com o valor definido em constantes
+            if (tipoRegisto == 1)
+            {
+                vetorBicicletas[pos].estado = ESTADO_AVAR;
+                vetorBicicletas[pos].avarias++;
+            }
+            else
+            {
+                vetorBicicletas[pos].estado = ESTADO_DISP;
+            }
+
+            // Acrescentar registo a um ficheiro de texto.
+            // Caso não consiga abrir o ficheiro, pedir ao utilizador se pretende tentar novamente
+            // Caso falhe novamente, volte a solicitar.
+            do
+            {
+                controloFich = escreverLogAvariaDisponibilidade(vetorBicicletas[pos], data, tipoRegisto, descReg);
+                if (!controloFich)
+                {
+                    repetir = escolhaSimOuNao("Pretende tentar guardar o registo novamente?");
+                }
+            }
+            while (!controloFich && repetir);
         }
         else
         {
-            vetorBicicletas[pos].estado = ESTADO_DISP;
+            printf("\nEfetue o registo de devolucao da bicicleta antes de registar uma avaria / disponibilidade.\n");
         }
-
-        // Acrescentar registo a um ficheiro de texto.
-        // Caso não consiga abrir o ficheiro, pedir ao utilizador se pretende tentar novamente
-        // Caso falhe novamente, volte a solicitar.
-        do
-        {
-            controloFich = escreverLogAvariaDisponibilidade(vetorBicicletas[pos], data, tipoRegisto, descReg);
-            if (!controloFich)
-            {
-                repetir = escolhaSimOuNao("Pretende tentar guardar o registo novamente?");
-            }
-        }
-        while (!controloFich && repetir);
     }
 }
 
@@ -69,7 +79,7 @@ int escreverLogAvariaDisponibilidade(tipoBicicleta bicicleta, tipoData data, int
     }
     else
     {
-        fprintf(fich, "\nRegisto da Bicicleta Número: %d \"%s\"\n", bicicleta.id, bicicleta.nome);
+        fprintf(fich, "Registo da Bicicleta Número: %d \"%s\"\n", bicicleta.id, bicicleta.nome);
         fprintf(fich, "\n\tRegisto efetuado em %d/%d/%d\n", data.dia, data.mes, data.ano);
         fprintf(fich, "\tTipo de registo: ");
         if (tipoRegisto == 1)
@@ -81,8 +91,8 @@ int escreverLogAvariaDisponibilidade(tipoBicicleta bicicleta, tipoData data, int
             fprintf(fich, "Disponibilidade\n");
         }
         fprintf(fich, "\tDistância total percorrida: %.2fkm\n", bicicleta.distanciaPercorrida);
-        fprintf(fich, "\tDescrição: %s", desc);
-        printf("\n\nRegisto efetuado com sucesso.\n\n");
+        fprintf(fich, "\tDescrição: %s\n\n", desc);
+        printf("\nRegisto efetuado com sucesso.\n");
         controlo = 1;
     }
     fclose(fich);
@@ -93,53 +103,91 @@ int escreverLogAvariaDisponibilidade(tipoBicicleta bicicleta, tipoData data, int
 // Cria um registo de requisição caso a introdução dos campos seja válida
 void registarReq(tipoBicicleta vetorBicicletas[], int contBicicletas, tipoRegReq vetorRegReq[], int *contRegReq)
 {
-    tipoRegReq novoReg;
-    int pos;
+    int pos, id, controlo;
 
-    if (*contRegReq < 100)
+    printf("\n\n\tREGISTO DE REQUISICAO\n\n");
+    id = lerIdBicicleta();
+    pos = procuraBicicleta(vetorBicicletas, id, contBicicletas);
+    if (pos != -1)
     {
-        printf("\n\n\tREGISTO DE REQUISICAO\n\n");
-        novoReg.idBic = lerIdBicicleta();
-        pos = procuraBicicleta(vetorBicicletas, novoReg.idBic, contBicicletas);
-        if (pos != -1)
+        // Apenas criar registo de a bicicleta selecionada estiver disponivel
+        if (vetorBicicletas[pos].estado == ESTADO_DISP)
         {
-            // Apenas criar registo de a bicicleta selecionada estiver disponivel
-            if (vetorBicicletas[pos].estado == ESTADO_DISP)
-            {
-                // Ler dados
-                novoReg = lerDadosRegReq(novoReg);
-
-                // Apenas criar registo se a bicicleta selecionada estiver no campus de origem escolhido
-                if (novoReg.campusOrigem == vetorBicicletas[pos].campus)
+                // Ler dados e inserir estrutura no vetor
+                controlo = criarReq(vetorRegReq, contRegReq, vetorBicicletas[pos]);
+                if (controlo != 0)
                 {
-                    // Inserir registo no vetor
-                    novoReg.idReq = *contRegReq + 1; // O id da requisição será a sua posição no vetor + 1, apenas estético, não é usado como localizador
-                    vetorRegReq[*contRegReq] = novoReg;
-                    (*contRegReq)++;
-                    // Alterar bicicleta
+                    // Alterar dados da bicicleta
                     vetorBicicletas[pos].requisicoes++;
                     vetorBicicletas[pos].estado = ESTADO_REQ;
-                    printf("\n\nRegisto de requisicao efetuado com sucesso.\n\n");
+                    printf("\nRegisto de requisicao efetuado com sucesso.\n");
                 }
-                else
-                {
-                    printf("\n\nA Bicicleta selecionada nao se encontra no campus de origem selecionado.\n\n");
-                }
-            }
-            else
-            {
-                printf("\n\nA Bicicleta selecionada nao se encontra disponivel.\n\n");
-            }
         }
         else
         {
-            printf("\n\nNao existe uma bicicleta com esse id.\n\n");
+            printf("\nA Bicicleta selecionada nao se encontra disponivel.\n");
         }
     }
     else
     {
-        printf("\n\nMaximo de registos atingido.\n\n");
+        printf(MENSAGEM_BICICLETA_NAO_EXISTE);
     }
+}
+
+// Recebe o vetor de registos de requisicao, um ponteiro para o contador de registos de req e a bicicleta a ser requisitada
+// Devolve 1 se criar, 0 se não
+int criarReq(tipoRegReq vetorRegReq[], int *contRegReq, tipoBicicleta bic)
+{
+    tipoRegReq novoReg; int i, controlo, comparacaoDatas;
+    novoReg.idBic = bic.id;
+    // Ler dados
+    novoReg = lerDadosRegReq(novoReg);
+    // Apenas criar registo se a bicicleta selecionada estiver no campus de origem escolhido
+    controlo = 0; // Apenas sera alterado no caso de sucesso
+    if (novoReg.campusOrigem == bic.campus)
+    {
+        comparacaoDatas = compararDatas(novoReg.dataReq, bic.dAquisicao);
+        // Apenas criar registo se a data de requisicao for depois ou igual à data de aquisição da bicicleta
+        if (comparacaoDatas == 1 || comparacaoDatas == 0)
+        {
+            // Inserir registo no vetor
+            if (*contRegReq != MAX_REGISTOS)
+            {
+                novoReg.idReq = *contRegReq + 1;
+                vetorRegReq[*contRegReq] = novoReg;
+                (*contRegReq)++;
+            }
+            else // Se estiver no limite do vetor
+            {
+                // Apagar a primeira requisicao ( a mais antiga) e deslocar todos os elementos do vetor
+                // para a esquerda, o id das requisicoes após o limite original ser atingido é o id do elemento
+                // anterior + 1
+                for (i = 1; i < *contRegReq; i++)
+                {
+                    vetorRegReq[i - 1] = vetorRegReq[i];
+                }
+                novoReg.idReq = vetorRegReq[i - 1].idReq + 1;
+                vetorRegReq[i] = novoReg;
+            }
+            controlo = 1;
+        }
+        else
+        {
+            printf("\nA data de requisicao nao pode ser antes da data de aquisicao da bicicleta.\n");
+            printf("Data de aquisicao da bicicleta: %d/%d/%d\n", bic.dAquisicao.dia, bic.dAquisicao.mes, bic.dAquisicao.ano);
+        }
+    }
+    else
+    {
+        printf("\nA Bicicleta selecionada nao se encontra no campus de origem selecionado.\nCampus da bicicleta atual: ");
+        switch (bic.campus)
+        {
+            case RESIDENCIAS: printf("Residencias"); break;
+            case CAMPUS1: printf("Campus 1"); break;
+            case CAMPUS2: printf("Campus 2"); break;
+        }
+    }
+    return controlo;
 }
 
 // Recebe uma estrutura do tipoRegReq e devolve outra com os dados lidos
@@ -147,25 +195,25 @@ tipoRegReq lerDadosRegReq(tipoRegReq dadosReg)
 {
     int controlo;
 
-    printf("\nInsira o nome do requisitante: ");
+    printf("\n\tInsira o nome do requisitante: ");
     do
     {
         lerString(dadosReg.nomeReq, LIM_NOME_REQ);
         controlo = verificarNome(dadosReg.nomeReq);
         if (!controlo)
         {
-            printf("\nNome invalido, repita a insercao: ");
+            printf("\n\tNome invalido, repita a insercao: ");
         }
     }
     while (!controlo);
 
-    printf("\nInsira o campus de origem\n");
+    printf("\n\tInsira o campus de origem\n");
     dadosReg.campusOrigem = escolhaCampus();
-    printf("\n Insira o campus de destino\n");
+    printf("\n\tInsira o campus de destino\n");
     dadosReg.campusDestino = escolhaCampus();
-    printf("\n Insira a data de requisicao (%s): ", FORMATO_DATA);
+    printf("\n\tInsira a data de requisicao (%s): ", FORMATO_DATA);
     dadosReg.dataReq = lerData();
-    printf("\n Insira a hora de emprestimo (%s): ", FORMATO_HORA);
+    printf("\n\tInsira a hora de emprestimo (%s): ", FORMATO_HORA);
     dadosReg.horaEmprestimo = lerHora();
     return dadosReg;
 }
@@ -173,6 +221,7 @@ tipoRegReq lerDadosRegReq(tipoRegReq dadosReg)
 // Recebe uma estrutura do tipoRegReq e mostra os dados de uma requisicao
 void mostrarRequisicao(tipoRegReq dados)
 {
+    char hora[CARATERES_HORA], data[CARATERES_DATA];
     printf("\nRequisicao n. %d\n", dados.idReq);
     printf("\tBicicleta requisitada: %d\n", dados.idBic);
     printf("\tNome do requisitante: %s\n", dados.nomeReq);
@@ -190,7 +239,9 @@ void mostrarRequisicao(tipoRegReq dados)
         case CAMPUS1: printf("%s\n", "Campus 1"); break;
         case CAMPUS2: printf("%s\n", "Campus 2"); break;
     }
-    printf("\tData de requisicao: %d/%d/%d %d:%d", dados.dataReq.dia, dados.dataReq.mes, dados.dataReq.ano, dados.horaEmprestimo.hora, dados.horaEmprestimo.minuto);
+    dataParaString(data, dados.dataReq, '/');
+    horaParaString(hora, dados.horaEmprestimo);
+    printf("\tData de requisicao: %s %s\n", data, hora);
 }
 
 // Recebe o vetor de requisições e o contador de elementos, mostra os dados do vetor
@@ -243,10 +294,9 @@ void mostrarRequisicoesDeUmaBicicleta(tipoRegReq vetorReg[], int contRegReq)
 
 // Recebe o vetor de bicicletas e o numero de elementos
 // Regista uma devolução
-void registarDev(tipoBicicleta vetorBicicletas[], int contBicicletas)
+void registarDev(tipoBicicleta vetorBicicletas[], int contBicicletas, tipoRegReq vetorRegReq[], int contRegReq)
 {
-    int id, pos;
-    tipoHora hora;
+    int id, pos, i;
     printf("\n\nREGISTO DE DEVOLUCAO\n\n");
 
     id = lerIdBicicleta();
@@ -254,20 +304,20 @@ void registarDev(tipoBicicleta vetorBicicletas[], int contBicicletas)
 
     if (pos == -1)
     {
-        printf("\n\nEssa bicicleta nao existe.\n\n");
+        printf(MENSAGEM_BICICLETA_NAO_EXISTE);
     }
     else
     {
         // Apenas efetuar o registo de devolução caso a bicicleta esteja requisitada
         if (vetorBicicletas[pos].estado == ESTADO_REQ)
         {
-            printf("Insira a distância percorrida (KM): ");
+            printf("\n\tInsira a distancia percorrida (KM): ");
             vetorBicicletas[pos].distanciaPercorrida += lerFloat(0, LIM_KM);
-            printf("Insira o tempo de utilizacao (%s): ", FORMATO_HORA);
-            hora = lerHora();
-            vetorBicicletas[pos].tempoUtilizacao += tipoHoraParaFloat(hora);
-            printf("Numero de cargas efetuadas: ");
+            printf("\tInsira o tempo de utilizacao em horas: ");
+            vetorBicicletas[pos].tempoUtilizacao += lerInteiro(0, LIM_TEMP_UTIL);
+            printf("\tNumero de cargas efetuadas: ");
             vetorBicicletas[pos].cargas += lerInteiro(0, LIM_CARGAS);
+
             // Se a bicicleta exceder as 1000 cargas deve ser desativada
             if (vetorBicicletas[pos].cargas >= LIM_CARGAS)
             {
@@ -277,11 +327,20 @@ void registarDev(tipoBicicleta vetorBicicletas[], int contBicicletas)
             {
                 vetorBicicletas[pos].estado = ESTADO_DISP;
             }
-            printf("\n\nRegisto efetuado com sucesso\n");
+
+            // Atualizar campus da bicicleta com o campus de destino da sua ultima requisicao
+            for (i = contRegReq; i > 0; i--)
+            {
+                if (vetorRegReq[i].idBic == vetorBicicletas[pos].id)
+                {
+                    vetorBicicletas[pos].campus = vetorRegReq[i].campusDestino;
+                }
+            }
+            printf("\nRegisto efetuado com sucesso\n");
         }
         else
         {
-            printf("\n\nEsta bicicleta nao se encontra requisitada.\n\n");
+            printf("\nEsta bicicleta nao se encontra requisitada.\n");
         }
     }
 }
@@ -319,10 +378,6 @@ int lerFichReg(tipoRegReq dadosReq[])
     {
         fread(&elem, sizeof(int), 1, fich);
         fread(dadosReq, sizeof(tipoRegReq), elem, fich);
-    }
-    else
-    {
-        printf("\nNao foi possivel abrir o ficheiro dos registos.\n");
     }
     fclose(fich);
     return elem;

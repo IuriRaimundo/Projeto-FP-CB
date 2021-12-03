@@ -32,10 +32,11 @@ typedef struct {
 	int cargas;      // Contador de cargas
 	int requisicoes; // Contador de requisições
 	int avarias;     // Contador de avarias
+	int substituicoes; // Contador de substituicoes de bateria
 	tipoData dAquisicao; // Data de aquisicao da bicicleta
 } tipoBicicleta;
 
-void criarBicicleta(tipoBicicleta vetorBicicletas[], int* contBicicletas);
+int criarBicicleta(tipoBicicleta vetorBicicletas[], int* contBicicletas);
 int lerIdBicicleta(void);
 int verificarUnicidadeIdBic(tipoBicicleta vetor[], int contBicicletas, int id);
 tipoBicicleta lerDadosBicicleta(tipoBicicleta bicicleta);
@@ -46,5 +47,7 @@ int lerFichBicicleta(tipoBicicleta dadosBic[]);
 void mostrarBicicleta(tipoBicicleta dados);
 void mostrarDadosBicicletas(tipoBicicleta vetorBicicletas[], int contBicicletas);
 void mostrarBicicletasRequisitadas(tipoBicicleta vetorBicicletas[], int contBicicletas);
+int contarBicicletasDisponiveis(tipoBicicleta vetorBicicletas[], int contBicicletas);
+float contarDistPercorrida(tipoBicicleta vetorBicicletas[], int contBicicletas);
 
 #endif // BICICLETAS_H_INCLUDED

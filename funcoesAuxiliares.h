@@ -9,7 +9,7 @@
 // Limite de opcoes na funcao auxiliar de escolha multipla
 #define LIM_OPCOES 10
 // Limite de carateres de uma opcao na funcao auxiliar de escolha multipla
-#define LIM_CHAR_OPCAO 25
+#define LIM_CHAR_OPCAO 70
 
 void limpaBufferStdin(void);
 int lerInteiro(int minimo, int maximo);
